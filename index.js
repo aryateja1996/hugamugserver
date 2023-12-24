@@ -12,7 +12,7 @@ app.use(express.json())
 app.use(express.urlencoded({
     extended: false
 }));
-const port = 433
+const port = 3000
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
