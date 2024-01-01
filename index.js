@@ -5,15 +5,25 @@ const firebaseAuth = firebase.auth();
 const firebaseDb = firebase.firestore();
 var app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: "*",
+}))
 
 app.use(express.json())
 
 app.use(express.urlencoded({
     extended: false
 }));
-const port = 3000
-
+const port = 80
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
