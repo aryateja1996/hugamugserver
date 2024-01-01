@@ -16,15 +16,18 @@ app.use(express.urlencoded({
 }));
 const port = 80
 app.use((req, res, next) => {
+  
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  console.log(res.getHeaders());
   next();
 });
 app.get('/', (req, res) => {
+  console.log("hello");
   res.send('Hello World!')
 })
 const category = [
@@ -36,6 +39,7 @@ const category = [
 ];
 //List Here
 app.get('/menu/:type', async (req, res) => {
+  console.log("menu");
   try {
     var type = req.params.type.toLowerCase(); 
     console.log(type); // Corrected the method call
@@ -93,6 +97,7 @@ for (let i = 0; i < category.length; i++) {
   })
 })
 app.get('/counts',async(req,res)=>{
+  console.log("counts");
   var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
   var counts = countsmain.data()
   res.send({counts})
