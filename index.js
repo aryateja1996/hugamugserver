@@ -32,14 +32,27 @@ app.get('/', (req, res) => {
 })
 const category = [
   "coffee",
+  "tea",
   "maggie",
   "milkshakes",
   "mocktails",
-  "thickshakes"
+  "thickshakes",
+  "icecream",
 ];
 //List Here
-app.get('/menu/:type', async (req, res) => {
+app.get('/menu/:type?*', async (req, res) => {
   console.log("menu");
+ if (req.params.type == null) {
+  var menu = []
+  var data = await firebaseDb.collection("menu").get().then(
+    querySnapshot => {
+      querySnapshot.docs.map(doc => {
+        menu.push(doc.id)
+      })}
+      
+  )
+  res.send({"category":menu})
+ } else {
   try {
     var type = req.params.type.toLowerCase(); 
     console.log(type); // Corrected the method call
@@ -57,6 +70,7 @@ app.get('/menu/:type', async (req, res) => {
     console.error("Error fetching menu data:", error);
     res.status(500).send("Internal Server Error");
   }
+ }
 });
 
 app.post('/order',async(req,res)=>{
