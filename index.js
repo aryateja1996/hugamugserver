@@ -73,31 +73,31 @@ app.post('/order',async(req,res)=>{
     "paymentMode":req.body["paymentMode"]
   }
   console.log(data);
-//  var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
-//  var counts = countsmain.data()
-// if(data["paymentMode"] != null){
-//   if(data["paymentMode"].toLowerCase() === 'cash'){
-//     counts['cashPayments'] = counts["cashPayments"] + data["price"]
-//    }else if(data["paymentMode"].toLowerCase() === 'online'){
-//     counts['onlinePayments'] = counts["onlinePayments"] + data["price"]
-//    }
-// }
-// for (let i = 0; i < category.length; i++) {
-//   var key = category[i] + "Orders"
-//   if (data["category"] == category[i]) {
-//     counts[key] = counts[key]+1
-//   }  
-// }
-// // Order Collection Population
-//   await firebaseDb.collection('order').doc().set(data).then(async()=>{
+ var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
+ var counts = countsmain.data()
+if(data["paymentMode"] != null){
+  if(data["paymentMode"].toLowerCase() === 'cash'){
+    counts['cashPayments'] = counts["cashPayments"] + data["price"]
+   }else if(data["paymentMode"].toLowerCase() === 'online'){
+    counts['onlinePayments'] = counts["onlinePayments"] + data["price"]
+   }
+}
+for (let i = 0; i < category.length; i++) {
+  var key = category[i] + "Orders"
+  if (data["category"] == category[i]) {
+    counts[key] = counts[key]+1
+  }
+}
+// Order Collection Population
+  await firebaseDb.collection('order').doc().set(data).then(async()=>{
     
-//     counts['totalOrders'] = counts["totalOrders"] + 1;
-//     //Dashboard counts Population
-//     await firebaseDb.collection('dashboard').doc('counts').set(counts)
-//     res.send({
-//       "message":"Added Data"
-//     })
-//   })
+    counts['totalOrders'] = counts["totalOrders"] + 1;
+    //Dashboard counts Population
+    await firebaseDb.collection('dashboard').doc('counts').set(counts)
+    res.send({
+      "message":"Added Data"
+    })
+  })
 })
 app.get('/counts',async(req,res)=>{
   console.log("counts");
