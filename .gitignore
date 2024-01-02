@@ -3,7 +3,8 @@ node_modules/
 
 # Environment variables
 .env
-
+#ignoring Port
+./port.js
 # Logs
 logs
 *.log
