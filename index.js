@@ -68,6 +68,7 @@ app.post('/order',async(req,res)=>{
   data = {
     "date": finalDate,
     "price": parseInt(req.body["price"]),
+    "quantity":parseInt(req.body['quantity']),
     "category": req.body["category"],
     "itemName": req.body["itemName"],
     "paymentMode":req.body["paymentMode"]
@@ -85,7 +86,7 @@ if(data["paymentMode"] != null){
 for (let i = 0; i < category.length; i++) {
   var key = category[i] + "Orders"
   if (data["category"].toLowerCase() == category[i]) {
-    counts[key] = counts[key]+1
+    counts[key] = counts[key]+data['quantity']
   }
 }
 // Order Collection Population
