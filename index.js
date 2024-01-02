@@ -84,7 +84,7 @@ if(data["paymentMode"] != null){
 }
 for (let i = 0; i < category.length; i++) {
   var key = category[i] + "Orders"
-  if (data["category"] == category[i]) {
+  if (data["category"].toLowerCase() == category[i]) {
     counts[key] = counts[key]+1
   }
 }
