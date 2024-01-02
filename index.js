@@ -14,7 +14,7 @@ app.use(express.json())
 app.use(express.urlencoded({
     extended: false
 }));
-const port = 80
+const port = require('./port.js')
 app.use((req, res, next) => {
   
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -40,7 +40,7 @@ const category = [
   "icecream",
 ];
 //List Here
-app.get('/menu/:type?*', async (req, res) => {
+app.get('/menu/:type?', async (req, res) => {
   console.log("menu");
  if (req.params.type == null) {
   var menu = []
