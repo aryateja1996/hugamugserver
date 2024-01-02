@@ -67,7 +67,7 @@ app.post('/order',async(req,res)=>{
   var data = {}
   data = {
     "date": finalDate,
-    "price": req.body["price"],
+    "price": parseInt(req.body["price"]),
     "category": req.body["category"],
     "itemName": req.body["itemName"],
     "paymentMode":req.body["paymentMode"]
