@@ -60,6 +60,8 @@ app.get('/menu/:type', async (req, res) => {
 });
 
 app.post('/order',async(req,res)=>{
+  reqBody = req.body;
+  console.log(reqBody);
   const date = new Date()
  var finalDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
   var data = {}
