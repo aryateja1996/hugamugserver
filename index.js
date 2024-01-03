@@ -149,6 +149,20 @@ var docId = orders.length + 1
     })
   })
 })
+
+app.post('/orderList',async(req,res)=>{
+  var filter = req.body['date'];
+  console.log(filter);
+var orders = []
+   await firebaseDb.collection('order').doc(filter).collection('todayOrders').get().then(querySnapshot => {
+    querySnapshot.docs.map(doc => {
+        // console.log('LOG 1', doc.data());
+        orders.push(doc.data())
+        console.log("Oredrs", orders);
+        return doc.data();
+    });})
+    res.send({"orders":orders})
+})
 app.get('/counts',async(req,res)=>{
   console.log("counts");
   var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
