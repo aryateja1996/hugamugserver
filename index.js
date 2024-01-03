@@ -27,7 +27,6 @@ app.use((req, res, next) => {
   next();
 });
 app.get('/', (req, res) => {
-  console.log("hello");
   res.send('Hello World!')
 })
 const category = [
@@ -55,7 +54,7 @@ res.send("Deleted")
 })
 //List Here
 app.get('/menu/:type?', async (req, res) => {
-  console.log("menu");
+
  if (req.params.type == null) {
   var menu = []
   var data = await firebaseDb.collection("menu").get().then(
@@ -88,18 +87,49 @@ app.get('/menu/:type?', async (req, res) => {
 });
 const name = 'mug'
 app.post('/login',async(req,res)=>{
-  if (req.body["name"].toLowerCase() == name || req.body["name"].toLowerCase() == 'veda') {
-    res.sendStatus(200)
-  } else {
-    res.sendStatus(400)
+var data = {
+  "email":req.body['email'],
+  "password":req.body['password']
+}
+var listOfUsers = await firebaseAuth.listUsers()
+contains= false;
+user = listOfUsers['users']
+for(var i = 0 ; i< user.length;i++){
+  if (user[i]['email'] == data['email']) {
+    contains = true;
   }
+}
+if (contains) {
+  var trail = await firebaseAuth.getUserByEmail(data['email'])
+
+var user = await firebaseDb.collection('users').doc(trail['uid']).get()
+if (user.data()['pass'] == req.body['password']) {
+  console.log("here");
+  res.status(200).send({
+    'name':user.data()['name'],
+    "phone":user.data()['phone'],
+    "isAdmin":user.data()['isAdmin'],
+    "type":user.data()['type'],
+    "uid":trail['uid'],
+  })
+} else {
+  console.log("here");
+  res.status(400).send({
+    "error":"Invalid PassWord"
+  })
+}
+
+} else {
+  res.status(400).send({
+    "error":"Invalid Email"
+  })
+}
 })
 app.post('/order',async(req,res)=>{
  
   const date = new Date()
  var finalDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
  var dateToday = `${date.toDateString()}`
- console.log(dateToday,"Date Today");
   var data = {}
   data = {
     "date": finalDate,
@@ -152,24 +182,20 @@ var docId = orders.length + 1
 
 app.post('/orderList',async(req,res)=>{
   var filter = req.body['date'];
-  console.log(filter);
 var orders = []
    await firebaseDb.collection('order').doc(filter).collection('todayOrders').get().then(querySnapshot => {
     querySnapshot.docs.map(doc => {
-        // console.log('LOG 1', doc.data());
         orders.push(doc.data())
-        console.log("Oredrs", orders);
         return doc.data();
     });})
     res.send({"orders":orders})
 })
 app.get('/counts',async(req,res)=>{
-  console.log("counts");
   var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
   var counts = countsmain.data()
-  console.log(counts);
   res.send({counts})
 })
+
 
 
 // Function to check if the date has changed
@@ -178,8 +204,6 @@ async function  checkDateChange (previouDate) {
 
   if (currentDate.toDateString() !== previousDate.toDateString()) {
     previousDate = currentDate;
-    // Date has changed, call your method here
-    console.log('Date has changed!');
     var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
   var counts = countsmain.data()
     await firebaseDb.collection('report').doc(previouDate.toDateString()).set(counts).then(async()=>{for (let i = 0; i < category.length; i++) {
