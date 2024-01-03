@@ -47,6 +47,9 @@ app.delete('/',async(req,res)=>{
   var key = category[i] + "Orders"
     counts[key] = 0
 }
+counts['cashPayments'] = 0;
+counts['onlinePayments']=0;
+counts['totalOrders']=0;
 await firebaseDb.collection('dashboard').doc('counts').set(counts)
 res.send("Deleted")
 })
