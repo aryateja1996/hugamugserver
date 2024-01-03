@@ -167,8 +167,44 @@ app.get('/counts',async(req,res)=>{
   console.log("counts");
   var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
   var counts = countsmain.data()
+  console.log(counts);
   res.send({counts})
 })
+
+
+// Function to check if the date has changed
+async function  checkDateChange (previouDate) {
+  const currentDate = new Date();
+
+  if (currentDate.toDateString() !== previousDate.toDateString()) {
+    previousDate = currentDate;
+    // Date has changed, call your method here
+    console.log('Date has changed!');
+    var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
+  var counts = countsmain.data()
+    await firebaseDb.collection('report').doc(previouDate.toDateString()).set(counts).then(async()=>{for (let i = 0; i < category.length; i++) {
+      var key = category[i] + "Orders"
+        counts[key] = 0
+    }
+    counts['cashPayments'] = 0;
+    counts['onlinePayments']=0;
+    counts['totalOrders']=0;
+    await firebaseDb.collection('dashboard').doc('counts').set(counts)})
+    
+  }
+
+  // Update the previous date for the next check
+ 
+}
+
+// Initial setup
+let previousDate = new Date();
+
+// Check for date change every second (adjust the interval as needed)
+setInterval(() => {
+  checkDateChange(previousDate);
+}, 1000);
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
