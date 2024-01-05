@@ -207,15 +207,15 @@ async function  checkDateChange (previouDate) {
     previousDate = currentDate;
     var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
   var counts = countsmain.data()
-    await firebaseDb.collection('report').doc(previouDate.toDateString()).set(counts).then(async()=>{for (let i = 0; i < category.length; i++) {
+    await firebaseDb.collection('report').doc(previouDate.toDateString()).set(counts)
+    for (let i = 0; i < category.length; i++) {
       var key = category[i] + "Orders"
         counts[key] = 0
     }
     counts['cashPayments'] = 0;
     counts['onlinePayments']=0;
     counts['totalOrders']=0;
-    await firebaseDb.collection('dashboard').doc('counts').set(counts)})
-    
+    await firebaseDb.collection('dashboard').doc('counts').set(counts)
   }
 
   // Update the previous date for the next check
