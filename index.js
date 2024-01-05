@@ -37,6 +37,7 @@ const category = [
   "mocktails",
   "thickshakes",
   "icecream",
+  "beveragesOrders",
 ];
 
 app.delete('/',async(req,res)=>{
