@@ -138,11 +138,12 @@ if (user.data()['pass'] == req.body['password']) {
 }
 })
 app.post('/order',async(req,res)=>{
- 
-  const date = new Date()
+ var daten = new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
+  const date = new Date(daten)
   
  var finalDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
  var dateToday = `${date.toDateString()}`
+ console.log(dateToday);
   var data = {}
   data = {
     "date": finalDate,
