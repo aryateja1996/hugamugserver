@@ -36,8 +36,9 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.send('Hello World!')
   var date = new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
+  var paresdate = new Date(date);
   console.log("Formatted Date ::: ",formattedDate.toUpperCase());
-console.log("To local time String :: ",date);
+console.log("To local time String :: ",paresdate.toLocaleTimeString());
 })
 const category = [
   "coffee",
