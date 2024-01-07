@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
   var date = new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
   var paresdate = new Date(date);
   console.log("Formatted Date ::: ",formattedDate.toUpperCase());
-console.log("To local time String :: ",paresdate.toLocaleTimeString());
+console.log("To local time String :: ",paresdate.toLocaleTimeString(),paresdate.toDateString());
 })
 const category = [
   "coffee",
@@ -140,6 +140,7 @@ if (user.data()['pass'] == req.body['password']) {
 app.post('/order',async(req,res)=>{
  
   const date = new Date()
+  
  var finalDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
  var dateToday = `${date.toDateString()}`
   var data = {}
@@ -212,33 +213,34 @@ app.get('/counts',async(req,res)=>{
 
 // Function to check if the date has changed
 async function  checkDateChange (previouDate) {
-  const currentDate =  DateTime.now().setZone("Asia/Kolkata");
+  var currentDateP = new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
+  const currentDate =  new Date(currentDateP);
 
-  // if (currentDate.toDateString() !== previousDate.toDateString()) {
-  //   previousDate = currentDate;
-  //   var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
-  // var counts = countsmain.data()
-  //   await firebaseDb.collection('report').doc(previouDate.toDateString()).set(counts)
-  //   for (let i = 0; i < category.length; i++) {
-  //     var key = category[i] + "Orders"
-  //       counts[key] = 0
-  //   }
-  //   counts['cashPayments'] = 0;
-  //   counts['onlinePayments']=0;
-  //   counts['totalOrders']=0;
-  //   await firebaseDb.collection('dashboard').doc('counts').set(counts)
-  // }
+  if (currentDate.toDateString() !== preDate.toDateString()) {
+    previousDate = currentDateP;
+    var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
+  var counts = countsmain.data()
+    await firebaseDb.collection('report').doc(previouDate.toDateString()).set(counts)
+    for (let i = 0; i < category.length; i++) {
+      var key = category[i] + "Orders"
+        counts[key] = 0
+    }
+    counts['cashPayments'] = 0;
+    counts['onlinePayments']=0;
+    counts['totalOrders']=0;
+    await firebaseDb.collection('dashboard').doc('counts').set(counts)
+  }
 
   // Update the previous date for the next check
  
 }
 
 // Initial setup
-let previousDate =  DateTime.now().setZone("Asia/Kolkata");
-
+let previousDate =   new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
+let preDate = new Date(previousDate)
 // Check for date change every second (adjust the interval as needed)
 setInterval(() => {
-  checkDateChange(previousDate);
+  checkDateChange(preDate);
 }, 1000);
 
 app.listen(port, () => {
