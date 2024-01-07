@@ -28,6 +28,8 @@ app.use((req, res, next) => {
 });
 app.get('/', (req, res) => {
   res.send('Hello World!')
+console.log(Date());
+console.log(Date().toLocaleString("en-IN", {timeZone: 'Asia/Kolkata'}));
 })
 const category = [
   "coffee",
