@@ -3,6 +3,13 @@ const express = require('express');
 const cors = require('cors');
 const firebaseAuth = firebase.auth();
 const firebaseDb = firebase.firestore();
+const { DateTime } = require("luxon");
+
+const date = DateTime.now().setZone("Asia/Kolkata");
+const formattedDate = date.toLocaleString(DateTime.DATETIME_FULL);
+
+
+
 var app = express()
 
 app.use(cors({
@@ -28,7 +35,8 @@ app.use((req, res, next) => {
 });
 app.get('/', (req, res) => {
   res.send('Hello World!')
-console.log(Date());
+  console.log(formattedDate,"Formatted Date");
+console.log(Date().now());
 console.log(Date().toLocaleString("en-IN", {timeZone: 'Asia/Kolkata'}));
 })
 const category = [
