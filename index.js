@@ -35,9 +35,9 @@ app.use((req, res, next) => {
 });
 app.get('/', (req, res) => {
   res.send('Hello World!')
-  console.log(formattedDate,"Formatted Date");
-console.log(Date().now());
-console.log(Date().toLocaleString("en-IN", {timeZone: 'Asia/Kolkata'}));
+  var date = new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
+  console.log("Formatted Date ::: ",formattedDate.toUpperCase());
+console.log("To local time String :: ",date);
 })
 const category = [
   "coffee",
@@ -211,29 +211,29 @@ app.get('/counts',async(req,res)=>{
 
 // Function to check if the date has changed
 async function  checkDateChange (previouDate) {
-  const currentDate = new Date();
+  const currentDate =  DateTime.now().setZone("Asia/Kolkata");
 
-  if (currentDate.toDateString() !== previousDate.toDateString()) {
-    previousDate = currentDate;
-    var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
-  var counts = countsmain.data()
-    await firebaseDb.collection('report').doc(previouDate.toDateString()).set(counts)
-    for (let i = 0; i < category.length; i++) {
-      var key = category[i] + "Orders"
-        counts[key] = 0
-    }
-    counts['cashPayments'] = 0;
-    counts['onlinePayments']=0;
-    counts['totalOrders']=0;
-    await firebaseDb.collection('dashboard').doc('counts').set(counts)
-  }
+  // if (currentDate.toDateString() !== previousDate.toDateString()) {
+  //   previousDate = currentDate;
+  //   var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
+  // var counts = countsmain.data()
+  //   await firebaseDb.collection('report').doc(previouDate.toDateString()).set(counts)
+  //   for (let i = 0; i < category.length; i++) {
+  //     var key = category[i] + "Orders"
+  //       counts[key] = 0
+  //   }
+  //   counts['cashPayments'] = 0;
+  //   counts['onlinePayments']=0;
+  //   counts['totalOrders']=0;
+  //   await firebaseDb.collection('dashboard').doc('counts').set(counts)
+  // }
 
   // Update the previous date for the next check
  
 }
 
 // Initial setup
-let previousDate = new Date();
+let previousDate =  DateTime.now().setZone("Asia/Kolkata");
 
 // Check for date change every second (adjust the interval as needed)
 setInterval(() => {
