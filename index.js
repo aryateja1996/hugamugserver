@@ -193,7 +193,56 @@ var docId = orders.length + 1
     })
   })
 })
+app.post('/offer',async(req,res)=>{
+  var daten = new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
+   const date = new Date(daten)
+   
+  var finalDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+  var dateToday = `${date.toDateString()}`
+  console.log(dateToday);
+   var data = {}
+   data = {
+     "date": finalDate,
+     "price": parseInt(req.body["price"]),
+     "itemName": req.body["itemName"],
+     "paymentMode":req.body["paymentMode"]
+   }
+  var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
+  var counts = countsmain.data()
+ if(data["paymentMode"] != null){
+   if(data["paymentMode"].toLowerCase() === 'cash'){
+     counts['cashPayments'] = counts["cashPayments"] - data["price"]
+    }else if(data["paymentMode"].toLowerCase() === 'online'){
+     counts['onlinePayments'] = counts["onlinePayments"] - data["price"]
+    }
+ }
+ 
+ var orders = []
+ var offers = await firebaseDb.collection('offer').doc(dateToday.toLocaleUpperCase()).get();
+ var d = offers.data()
+ 
+ console.log(d,"Here",orders);
+ if (d) {
+  orders = d["offer"]
+  console.log(orders);
+  orders.push(data)
+ } else {
+  console.log("Orders Else",orders);
+  orders=[];
+  orders.push(data)
+ }
+ var offer = {}
+offer['offer']=orders
+console.log(offer);
 
+   await firebaseDb.collection('offer').doc(dateToday.toLocaleUpperCase()).set(offer).then(async()=>{
+
+     await firebaseDb.collection('dashboard').doc('counts').set(counts)
+     res.send({
+       "message":"Added Offer"
+     })
+   })
+ })
 app.post('/orderList',async(req,res)=>{
   var filter = req.body['date'];
 var orders = []
@@ -210,7 +259,11 @@ app.get('/counts',async(req,res)=>{
   res.send({counts})
 })
 
-
+app.get('/gReport',async(req,res)=>{
+  var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
+  var counts = countsmain.data()
+    await firebaseDb.collection('report').doc(preDate.toDateString()).set(counts)
+})
 
 // Function to check if the date has changed
 async function  checkDateChange (previouDate) {
