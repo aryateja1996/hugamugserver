@@ -266,29 +266,11 @@ app.get('/gReport',async(req,res)=>{
 })
 
 // Function to check if the date has changed
-async function  checkDateChange (previouDate) {  var currentDate =  new Date();
-
-  if (currentDate.toDateString() !== previousDate.toDateString()) {
-    previousDate = currentDateP;
-    var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
-  var counts = countsmain.data()
-    await firebaseDb.collection('report').doc(previouDate.toDateString()).set(counts)
-    for (let i = 0; i < category.length; i++) {
-      var key = category[i] + "Orders"
-        counts[key] = 0
-    }
-    counts['cashPayments'] = 0;
-    counts['onlinePayments']=0;
-    counts['totalOrders']=0;
-    await firebaseDb.collection('dashboard').doc('counts').set(counts)
-  }
-
-  // Update the previous date for the next check
- 
+async function  checkDateChange (previouDate) {
 }
 
 // Initial setup
-let previousDate =   new Date();
+let previousDate = new Date();
 
 // Check for date change every second (adjust the interval as needed)
 setInterval(() => {
