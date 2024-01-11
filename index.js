@@ -262,15 +262,13 @@ app.get('/counts',async(req,res)=>{
 app.get('/gReport',async(req,res)=>{
   var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
   var counts = countsmain.data()
-    await firebaseDb.collection('report').doc(preDate.toDateString()).set(counts)
+    await firebaseDb.collection('report').doc(previousDate.toDateString()).set(counts)
 })
 
 // Function to check if the date has changed
-async function  checkDateChange (previouDate) {
-  var currentDateP = new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
-  const currentDate =  new Date(currentDateP);
+async function  checkDateChange (previouDate) {  var currentDate =  new Date();
 
-  if (currentDate.toDateString() !== preDate.toDateString()) {
+  if (currentDate.toDateString() !== previousDate.toDateString()) {
     previousDate = currentDateP;
     var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
   var counts = countsmain.data()
@@ -290,11 +288,11 @@ async function  checkDateChange (previouDate) {
 }
 
 // Initial setup
-let previousDate =   new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
-let preDate = new Date(previousDate)
+let previousDate =   new Date();
+
 // Check for date change every second (adjust the interval as needed)
 setInterval(() => {
-  checkDateChange(preDate);
+  checkDateChange(previousDate);
 }, 1000);
 
 app.listen(port, () => {
