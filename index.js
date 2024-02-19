@@ -54,7 +54,6 @@ const category = [
 app.delete('/',async(req,res)=>{
 var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get(); 
  var counts = countsmain.data()
-await firebaseDb.collection('dashboard').doc('counts').set(counts)
   await firebaseDb.collection('report').doc(previousDate.toDateString()).set(counts)
  for (let i = 0; i < category.length; i++) {
   var key = category[i] + "Orders"
@@ -63,6 +62,7 @@ await firebaseDb.collection('dashboard').doc('counts').set(counts)
 counts['cashPayments'] = 0;
 counts['onlinePayments']=0;
 counts['totalOrders']=0;
+await firebaseDb.collection('dashboard').doc('counts').set(counts)
 res.send("Deleted")
 })
 //List Here
