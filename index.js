@@ -52,8 +52,9 @@ const category = [
 ];
 
 app.delete('/',async(req,res)=>{
-  var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
+var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get(); 
  var counts = countsmain.data()
+await firebaseDb.collection('dashboard').doc('counts').set(counts)
   await firebaseDb.collection('report').doc(previousDate.toDateString()).set(counts)
  for (let i = 0; i < category.length; i++) {
   var key = category[i] + "Orders"
@@ -62,7 +63,6 @@ app.delete('/',async(req,res)=>{
 counts['cashPayments'] = 0;
 counts['onlinePayments']=0;
 counts['totalOrders']=0;
-await firebaseDb.collection('dashboard').doc('counts').set(counts)
 res.send("Deleted")
 })
 //List Here
@@ -259,7 +259,31 @@ app.get('/counts',async(req,res)=>{
   var counts = countsmain.data()
   res.send({counts})
 })
-
+app.post('/category',async(req,res)=>{
+  var daten = new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata'});
+   const date = new Date(daten)
+   
+  var finalDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+  var categories = [];
+  var data = {
+    "category":req.body["category"],
+    "description":req.body["description"],
+  }
+  //implement inventory here
+  /**
+   * disposable
+   *    -- Coffee Cups -- 100 -- 1/-
+   *    -- Tea Cups    -- 100 -- 1/-
+   */
+ await firebaseDb.collection('inventory').get().then(querySnapshot => {
+  querySnapshot.docs.map(doc =>{
+    categories.push(doc.data())
+    return doc.data();
+  })
+ })
+ 
+ await firebaseDb.collection('inventory').doc(categories.length.toString()).set(data);
+})
 app.get('/gReport',async(req,res)=>{
   var countsmain =  await firebaseDb.collection('dashboard').doc('counts').get();
   var counts = countsmain.data()
